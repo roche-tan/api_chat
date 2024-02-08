@@ -6,6 +6,8 @@ import cors from "cors";
 import { connectDbMysql } from "../infrastructure/database/sql_db";
 import config from "../config";
 
+import routerUser from "../routes/user.routes";
+
 const logger = (req: Request, _res: Response, next: NextFunction) => {
   console.log(`
   ${req.method}
@@ -19,6 +21,10 @@ class Server {
   private httpServer: ReturnType<typeof createServer>;
   private io: IOServer;
   private port: string | number;
+  private path = {
+    users: "/users",
+    chatRooms: "/chatrooms",
+  };
   private rooms: Record<string, { members: string[] }> = {};
 
   constructor() {
@@ -27,11 +33,11 @@ class Server {
     this.httpServer = createServer(this.app);
     this.io = new IOServer(this.httpServer, {
       cors: {
-        // origin: "http://localhost:3000",
-        origin: "*",
+        origin: "http://localhost:3000",
+        // origin: "*",
         methods: ["GET", "POST"],
         // credentials: true,
-        allowedHeaders: ["my-custom-header"], // Añade esto solo si necesitas encabezados personalizados
+        // allowedHeaders: ["my-custom-header"], // Añade esto solo si necesitas encabezados personalizados
       },
     });
     this.rooms = {};
@@ -48,37 +54,34 @@ class Server {
     this.app.use(logger);
   }
 
+  routes() {
+    this.app.use(this.path.users);
+    this.app.use(this.path.chatRooms);
+  }
+
   configureSocket() {
     this.io.on("connection", (socket: Socket) => {
       console.log("Un usuario se ha conectado");
 
       socket.on("create_room", (roomName) => {
         this.rooms[roomName] = { members: [] }; // Crear una nueva sala con un array de miembros
-        socket.join(roomName); //Unir creador a la sala
-        this.io.emit("room_list", Object.keys(this.rooms)); //Emite la lista actualizada de salas a todos los clientes
+        socket.join(roomName); // Unir al creador a la sala
+        this.io.emit("room_list", Object.keys(this.rooms)); // Emitir la lista actualizada de salas a todos los clientes
       });
 
       socket.on("request_room_list", () => {
         socket.emit("room_list", Object.keys(this.rooms)); // Emitir la lista de salas al solicitante
       });
 
-      //Unirse a la sala
+      // Unirse a una sala de chat
       socket.on("join_room", (room: string) => {
-        if (!this.rooms[room]) {
-          socket.emit("error", `La sala ${room} no existe`);
-          return;
-        }
         socket.join(room);
-        console.log("Usuario se ha unido a la sala ", room);
+        console.log(`Usuario se ha unido a la sala ${room}`);
       });
 
-      //Manejo mensajes en la sala
+      // Manejo de mensajes en una sala de chat
       socket.on("chat_message", ({ room, message, userName }) => {
-        if (this.rooms[room]) {
-          this.io.to(room).emit("chat_message", { userName, message });
-        } else {
-          socket.emit("error", `La sala ${room} no existe`);
-        }
+        this.io.to(room).emit("chat_message", { userName, message });
       });
 
       socket.on("disconnect", () => {

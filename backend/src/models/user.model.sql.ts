@@ -1,4 +1,5 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes } from "sequelize";
+import { sequelize } from "../db/config.sql";
 
 class User extends Model {
   public id!: number;
@@ -10,22 +11,24 @@ User.init(
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     createdAt: {
-      field: 'created_at',
+      field: "created_at",
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
+      defaultValue: DataTypes.NOW,
     },
     updatedAts: {
-      field: 'created_at',
+      field: "created_at",
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW
-    }
+      defaultValue: DataTypes.NOW,
+    },
   },
-  { sequelize, modelName: 'User', tableName: 'user', timestamps: true }
+  { sequelize, modelName: "User", tableName: "user", timestamps: true }
 );
+
+export default User;
