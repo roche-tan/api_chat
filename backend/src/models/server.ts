@@ -7,13 +7,14 @@ import { connectDbMysql } from "../infrastructure/database/sql_db";
 import config from "../config";
 
 import routerUser from "../routes/user.routes";
+import routerChatRoom from "../routes/chatRoom.routes";
 
 const logger = (req: Request, _res: Response, next: NextFunction) => {
   console.log(`
-  ${req.method}
-  ${req.url}
-  ${req.ip}
-  `);
+      ${req.method} 
+      ${req.url} 
+      ${req.ip}`);
+  next();
 };
 
 class Server {
@@ -29,7 +30,7 @@ class Server {
 
   constructor() {
     this.app = express();
-    this.port = config.port;
+    this.port = config.port || 5001;
     this.httpServer = createServer(this.app);
     this.io = new IOServer(this.httpServer, {
       cors: {
@@ -40,8 +41,8 @@ class Server {
         // allowedHeaders: ["my-custom-header"], // Añade esto solo si necesitas encabezados personalizados
       },
     });
-    this.rooms = {};
-    this.configureSocket();
+    // this.rooms = {};
+    // this.configureSocket();
   }
 
   async dbConnect() {
@@ -55,8 +56,10 @@ class Server {
   }
 
   routes() {
-    this.app.use(this.path.users);
-    this.app.use(this.path.chatRooms);
+    console.log("llamando rutas");
+    this.app.use(this.path.users, routerUser);
+    this.app.use(this.path.chatRooms, routerChatRoom);
+    console.log("rutas ok");
   }
 
   configureSocket() {
@@ -99,6 +102,7 @@ class Server {
   public async init() {
     await this.dbConnect();
     this.middlewares();
+    this.routes();
     this.configureSocket();
     this.listen();
   }

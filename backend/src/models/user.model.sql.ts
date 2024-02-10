@@ -22,8 +22,8 @@ User.init(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
-    updatedAts: {
-      field: "created_at",
+    updatedAt: {
+      field: "updated_at",
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },

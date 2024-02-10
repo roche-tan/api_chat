@@ -1,8 +1,10 @@
 import { Router } from "express";
-// import chatRoomController
+import chatRoomController from "../controllers/charRoom.controller";
 
 const router = Router();
 
-router.post("/login", chatRoomController.createChatRoom);
-router.get("/", chatRoomController.chatRoomMessages);
-router.get("/:id/messages", chatRoomController.chatRoomMessages);
+router.post("/", chatRoomController.createChatRoom);
+router.get("/", chatRoomController.showListChatRooms);
+router.get("/:id/messages", chatRoomController.showChatRoomById);
+
+export default router;

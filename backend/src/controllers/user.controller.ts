@@ -5,11 +5,15 @@ class UserController {
   private userRepository?: UserRepository;
 
   constructor() {
+    this.userRepository = new UserRepository();
     this.createUser = this.createUser.bind(this);
   }
-  // POST /players: crea un jugador/a.
+  // POST /users: crea un usuario.
   public async createUser(req: Request, res: Response): Promise<void> {
+    console.log("create user controller 1");
+
     try {
+      console.log("create user controller");
       if (!this.userRepository) {
         throw new Error("User repository is not initialized");
       }
@@ -18,7 +22,7 @@ class UserController {
 
       // Crear usuario
       const newUser = await this.userRepository.createUser(name);
-
+      console.log("create user controller", newUser);
       //pasar datos del usuario
       res.status(200).json({ name: newUser.name, userId: newUser.id });
     } catch (error) {
@@ -28,8 +32,7 @@ class UserController {
           console.log("Error al iniciar sesión: ", error.message);
           res.status(400).json({ message: error.message });
         } else {
-          ({ message: error.message });
-          res.status(500).json({ message: "Error interno del servidor" });
+          res.status(500).json({ message: error.message }); // Esta línea estaba incompleta en tu código
         }
       }
     }
