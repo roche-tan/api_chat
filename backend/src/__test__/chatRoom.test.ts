@@ -96,4 +96,31 @@ describe("ChatRoomRepository", () => {
     const chatRoom = await chatRoomRepository.showChatRoomById(9999);
     expect(chatRoom).toBeNull();
   });
+
+  test("addMessageToChatRoom añade un mensaje a la sala de chat correctamente", async () => {
+    // Asegúrate de tener una sala de chat creada para probar
+    const roomName = "Room 1";
+    const createdRoom = await ChatRoom.create({ roomName, messageList: [] });
+
+    const chatRoomId = createdRoom.id;
+    const message = "Este es un mensaje de prueba";
+    const userId = 1; // Asume que este es un ID válido de usuario en tu aplicación
+
+    // Añade un mensaje a la sala de chat
+    const updatedRoom = await chatRoomRepository.addMessageToChatRoom(
+      chatRoomId,
+      message,
+      userId
+    );
+
+    // Verifica que el mensaje se haya añadido correctamente
+    expect(updatedRoom.messageList).toHaveLength(1);
+    expect(updatedRoom.messageList[0]).toEqual(
+      expect.objectContaining({
+        message,
+        userId,
+        date: expect.any(String), // Aquí se verifica que la fecha sea una cadena, pero no se compara con un valor específico
+      })
+    );
+  });
 });

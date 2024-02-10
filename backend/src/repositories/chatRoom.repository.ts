@@ -32,6 +32,33 @@ class ChatRoomRepository {
     const chatRoom = await ChatRoom.findByPk(id);
     return chatRoom;
   }
+
+  async addMessageToChatRoom(
+    chatRoomId: number,
+    message: string,
+    userId: number
+  ) {
+    const chatRoom = await ChatRoom.findByPk(chatRoomId);
+
+    // Buscar la sala de chat por su ID
+    if (!chatRoom) {
+      throw new Error("La sala no existe");
+    }
+
+    // Construir el nuevo mensaje
+    const newMessage = { message, userId, date: new Date().toISOString() };
+
+    // Añadir el nuevo mensaje al messageList existente
+    // Si el messageList está vacío, inicializarlo como un arreglo vacío
+    const messageList = chatRoom.messageList || [];
+    messageList.push(newMessage);
+
+    // Guardar los cambios en la base de datos
+    chatRoom.messageList = messageList;
+    await chatRoom.save();
+
+    return chatRoom;
+  }
 }
 
 export default ChatRoomRepository;
