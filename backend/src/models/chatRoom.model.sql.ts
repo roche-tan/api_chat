@@ -33,7 +33,7 @@ ChatRoom.init(
       defaultValue: DataTypes.NOW,
     },
   },
-  { sequelize, modelName: "ChatRoom", tableName: "chatroom", timestamps: true }
+  { sequelize, modelName: "ChatRoom", tableName: "chatRoom", timestamps: true }
 );
 
 export default ChatRoom;

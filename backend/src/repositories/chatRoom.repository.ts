@@ -28,8 +28,8 @@ class ChatRoomRepository {
     return allRooms;
   }
 
-  async showChatRoomById(id: number) {
-    const chatRoom = await ChatRoom.findByPk(id);
+  async showChatRoomByName(name: string) {
+    const chatRoom = await ChatRoom.findOne({ where: { name: name } });
     return chatRoom;
   }
 

@@ -8,17 +8,19 @@ class ChatRoomController {
     this.chatRoomRepository = new ChatRoomRepository();
     this.createChatRoom = this.createChatRoom.bind(this);
     this.showListChatRooms = this.showListChatRooms.bind(this);
-    this.showChatRoomById = this.showChatRoomById.bind(this);
+    this.showChatRoomByName = this.showChatRoomByName.bind(this);
   }
 
   // POST /chatroom: crea una sala.
   public async createChatRoom(req: Request, res: Response): Promise<void> {
+    console.log("create chatroom");
     try {
       if (!this.chatRoomRepository) {
         throw new Error("Chat Room repository is not initialized");
       }
 
       const { name } = req.body;
+      console.log("roomName", name);
 
       // crear nueva sala
       const newChatRoom = await this.chatRoomRepository.createChatRoom(name);
@@ -55,16 +57,16 @@ class ChatRoomController {
     }
   }
 
-  async showChatRoomById(req: Request, res: Response): Promise<void> {
+  async showChatRoomByName(req: Request, res: Response): Promise<void> {
     try {
       if (!this.chatRoomRepository) {
         throw new Error("Chat room repository is not initialized");
       }
 
-      const id = parseInt(req.params.id, 10); // Convertir a número
+      const { name } = req.params; 
 
-      const showChatRoomById = await this.chatRoomRepository.showChatRoomById(
-        id
+      const showChatRoomById = await this.chatRoomRepository.showChatRoomByName(
+        name
       );
       res.status(200).json(showChatRoomById);
     } catch (error) {

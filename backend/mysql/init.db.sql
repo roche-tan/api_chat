@@ -7,8 +7,8 @@ CREATE TABLE user (
 
 CREATE TABLE chatRoom (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    room_name VARCHAR(150) NOT NULL,
-    message_list JSON NOT NULL,
+    roomName VARCHAR(150) NOT NULL,
+    messageList JSON NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
