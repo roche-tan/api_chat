@@ -43,7 +43,7 @@ Este proyecto utiliza una variedad de tecnologías modernas para su desarrollo, 
 - **Node.js**: Como entorno de ejecución para JavaScript en el servidor.
 - **TypeScript**: Para añadir tipado estático al código y mejorar la calidad del desarrollo.
 - **Jest**: Para pruebas unitarias y asegurar la calidad del código.
-- **Socket.io**: Para poder mantener la conexión de los eventos y mantener el chat a tiempo real.
+- **Socket.io**: Para poder poder escuchar de los eventos y mantener el chat a tiempo real.
 
 
 ## Licencia
