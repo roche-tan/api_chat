@@ -32,9 +32,9 @@ Para obtener una copia local en funcionamiento, sigue estos pasos:
    ```URL: /users
    Método: POST
    Cuerpo de la Petición:
-   name: Nombre del jugador (tipo string).
+   name: Nombre del usuario (tipo string).
    Respuesta Esperada:
-   Código de estado 200 OK con un JSON que contiene la información del jugador creado.
+   Código de estado 200 OK con un JSON que contiene la información del usuario creado.
 
 ## Tecnologías Utilizadas
 
