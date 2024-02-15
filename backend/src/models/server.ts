@@ -97,8 +97,10 @@ class Server {
 
       socket.on("request_room_list", async () => {
         try {
-          await this.chatRoomRepository.showChatRoomList();
-          socket.emit("room_list", Object.keys(this.rooms)); // Emitir la lista de salas al solicitante
+          const roomList = await this.chatRoomRepository.showChatRoomList();
+          const roomNames = roomList.map((room) => room.roomName); //itera en las salas para luego mostarlas
+          // socket.emit("room_list", Object.keys(this.rooms)); // Emitir la lista de salas al solicitante
+          socket.emit("room_list", roomNames); // Emitir la lista de salas al solicitante
         } catch (error) {
           if (error instanceof Error) {
             socket.emit("error", error.message);
@@ -111,13 +113,16 @@ class Server {
 
       // Unirse a una sala de chat
       socket.on("join_room", async (room: string) => {
+        console.log("join_room server");
         await this.chatRoomRepository.showChatRoomByName(room);
         socket.join(room);
         console.log(`Usuario se ha unido a la sala ${room}`);
       });
 
       // Manejo de mensajes en una sala de chat
-      socket.on("chat_message", ({ room, message, userName }) => {
+      socket.on("chat_message", async ({ room, message, userName }) => {
+        console.log("chat message socket");
+        await this.chatRoomRepository.addMessageToChatRoom;
         this.io.to(room).emit("chat_message", { userName, message });
       });
 

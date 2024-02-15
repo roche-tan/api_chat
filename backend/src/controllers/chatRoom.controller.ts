@@ -63,7 +63,7 @@ class ChatRoomController {
         throw new Error("Chat room repository is not initialized");
       }
 
-      const { name } = req.params; 
+      const { name } = req.params;
 
       const showChatRoomById = await this.chatRoomRepository.showChatRoomByName(
         name
@@ -79,6 +79,7 @@ class ChatRoomController {
     req: Request,
     res: Response
   ): Promise<void> {
+    console.log("addMessageToChatRoom controller");
     try {
       const chatRoomId = parseInt(req.params.id, 10);
       const { message, userId } = req.body;
