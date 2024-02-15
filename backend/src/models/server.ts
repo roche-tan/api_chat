@@ -79,7 +79,8 @@ class Server {
 
       socket.on("create_room", async (roomName) => {
         try {
-          console.log("create room socket");
+          console.log("create room socket", roomName);
+
           await this.chatRoomRepository.createChatRoom(roomName);
           this.rooms[roomName] = { members: [] }; // Crear una nueva sala con un array de miembros
           socket.join(roomName); // Unir al creador a la sala
@@ -94,12 +95,23 @@ class Server {
         }
       });
 
-      socket.on("request_room_list", () => {
-        socket.emit("room_list", Object.keys(this.rooms)); // Emitir la lista de salas al solicitante
+      socket.on("request_room_list", async () => {
+        try {
+          await this.chatRoomRepository.showChatRoomList();
+          socket.emit("room_list", Object.keys(this.rooms)); // Emitir la lista de salas al solicitante
+        } catch (error) {
+          if (error instanceof Error) {
+            socket.emit("error", error.message);
+          } else {
+            // Manejar el caso en que error no sea una instancia de Error
+            socket.emit("error", "No se puede mostrar la lista");
+          }
+        }
       });
 
       // Unirse a una sala de chat
-      socket.on("join_room", (room: string) => {
+      socket.on("join_room", async (room: string) => {
+        await this.chatRoomRepository.showChatRoomByName(room);
         socket.join(room);
         console.log(`Usuario se ha unido a la sala ${room}`);
       });
