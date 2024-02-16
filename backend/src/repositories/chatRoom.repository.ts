@@ -29,35 +29,55 @@ class ChatRoomRepository {
   }
 
   async showChatRoomByName(name: string) {
-    const chatRoom = await ChatRoom.findOne({ where: { name: name } });
+    const chatRoom = await ChatRoom.findOne({ where: { roomName: name } });
     return chatRoom;
   }
 
-  async addMessageToChatRoom(
-    chatRoomId: number,
-    message: string,
-    userId: number
-  ) {
-    const chatRoom = await ChatRoom.findByPk(chatRoomId);
+  // async addMessageToChatRoomById(
+  //   chatRoomId: number,
+  //   message: string,
+  //   userName: string
+  // ) {
+  //   const chatRoom = await ChatRoom.findByPk(chatRoomId);
 
-    // Buscar la sala de chat por su ID
+  //   if (!chatRoom) {
+  //     throw new Error("La sala no existe");
+  //   }
+
+  //   const messageList = chatRoom.messageList || [];
+  //   const newMessage = {
+  //     userName,
+  //     message,
+  //     timestamp: new Date().toDateString(),
+  //   };
+
+  //   messageList.push(newMessage);
+
+  //   await chatRoom.update({ messageList });
+  // }
+
+  async addMessageToChatRoomByName(
+    roomName: string,
+    message: string,
+    userName: string
+  ) {
+    const chatRoom = await ChatRoom.findOne({ where: { roomName } });
+
     if (!chatRoom) {
       throw new Error("La sala no existe");
     }
 
-    // Construir el nuevo mensaje
-    const newMessage = { message, userId, date: new Date().toISOString() };
-
-    // Añadir el nuevo mensaje al messageList existente
-    // Si el messageList está vacío, inicializarlo como un arreglo vacío
     const messageList = chatRoom.messageList || [];
+    const newMessage = {
+      userName,
+      message,
+      timestamp: new Date().toISOString(),
+    };
+    console.log(messageList, "message list repo");
+    console.log(newMessage, "new message list repo");
     messageList.push(newMessage);
-
-    // Guardar los cambios en la base de datos
-    chatRoom.messageList = messageList;
-    await chatRoom.save();
-
-    return chatRoom;
+    console.log(messageList, "message list push");
+    await chatRoom.update({ messageList });
   }
 }
 

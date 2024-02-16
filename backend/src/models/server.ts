@@ -114,16 +114,35 @@ class Server {
       // Unirse a una sala de chat
       socket.on("join_room", async (room: string) => {
         console.log("join_room server");
-        await this.chatRoomRepository.showChatRoomByName(room);
+        const chatRoom = await this.chatRoomRepository.showChatRoomByName(room);
+        if (!chatRoom) {
+          socket.emit("room_error", "La sala no existe");
+          return;
+        }
         socket.join(room);
         console.log(`Usuario se ha unido a la sala ${room}`);
       });
 
       // Manejo de mensajes en una sala de chat
       socket.on("chat_message", async ({ room, message, userName }) => {
-        console.log("chat message socket");
-        await this.chatRoomRepository.addMessageToChatRoom;
-        this.io.to(room).emit("chat_message", { userName, message });
+        try {
+          // const chatRoomId = parseInt(room, 10);
+          // if (isNaN(chatRoomId)) {
+          //   throw new Error("El identificador de la sala debe ser un número");
+          // }
+
+          await this.chatRoomRepository.addMessageToChatRoomByName(
+            room,
+            message,
+            userName
+          );
+          this.io.to(room).emit("chat_message", { userName, message });
+        } catch (error) {
+          console.error(
+            "Error al guardar el mensaje en la base de datos:",
+            error
+          );
+        }
       });
 
       socket.on("disconnect", () => {
