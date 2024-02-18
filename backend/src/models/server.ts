@@ -121,16 +121,15 @@ class Server {
         }
         socket.join(room);
         console.log(`Usuario se ha unido a la sala ${room}`);
+
+        // Recupero y emito los mensajes existentes de la sala
+        const messagesList = await await this.chatRoomRepository.showMessagesList(room)
+        socket.emit("existing_messages", messagesList)
       });
 
       // Manejo de mensajes en una sala de chat
       socket.on("chat_message", async ({ room, message, userName }) => {
         try {
-          // const chatRoomId = parseInt(room, 10);
-          // if (isNaN(chatRoomId)) {
-          //   throw new Error("El identificador de la sala debe ser un número");
-          // }
-
           await this.chatRoomRepository.addMessageToChatRoomByName(
             room,
             message,

@@ -77,6 +77,15 @@ class ChatRoomRepository {
     // Guardar los cambios en la base de datos
     // await chatRoom.save();
   }
+
+  async showMessagesList(roomName: string) {
+    const chatRoom = await ChatRoom.findOne({ where: { roomName } });
+    if (!chatRoom) {
+      throw new Error("La sala no existe");
+    }
+
+    return chatRoom.messageList || [];
+  }
 }
 
 export default ChatRoomRepository;

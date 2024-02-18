@@ -82,17 +82,47 @@ describe("ChatRoomRepository", () => {
     expect(rooms.some((room) => room.roomName === "Room 2")).toBeTruthy();
   });
 
-
   test("addMessageToChatRoom añade un mensaje a la sala de chat correctamente", async () => {
     // Asegúrate de tener una sala de chat creada para probar
     const roomName = "Room 1";
     const message = "Este es un mensaje de prueba";
-    const userName = "testUser"; 
+    const userName = "testUser";
 
-    await chatRoomRepository.addMessageToChatRoomByName(roomName, message, userName)
+    await chatRoomRepository.addMessageToChatRoomByName(
+      roomName,
+      message,
+      userName
+    );
 
     //verificar si el último mensaje en la lista corresponde al que acabas de añadir.
-    const chatRoom = await chatRoomRepository.showChatRoomByName(roomName)
-    expect(chatRoom).not.toBeNull()
+    const chatRoom = await chatRoomRepository.showChatRoomByName(roomName);
+    expect(chatRoom).not.toBeNull();
+  });
+
+  test("showMessagesList de una sala de chat", async () => {
+    const roomName = "Room 1"; // Asegúrate de que esta sala ya tiene mensajes
+    const message = "Este es un mensaje de prueba";
+    const userName = "testUser";
+
+    // Primero, añade un mensaje a la sala para asegurarte de que hay al menos uno
+    await chatRoomRepository.addMessageToChatRoomByName(
+      roomName,
+      message,
+      userName
+    );
+
+    // Luego, recupera la lista de mensajes para esa sala
+    const messagesList = (await chatRoomRepository.showMessagesList(
+      roomName
+    )) as any[];
+
+    // Verifica que la lista de mensajes no esté vacía
+    expect(messagesList.length).toBeGreaterThan(0);
+
+    // Verifica que el último mensaje en la lista sea el que acabas de añadir
+    // Este enfoque requiere una aserción de tipo 'any'
+    const lastMessage = messagesList[messagesList.length - 1];
+    expect(lastMessage.userName).toEqual(userName);
+    expect(lastMessage.message).toEqual(message);
   });
 });

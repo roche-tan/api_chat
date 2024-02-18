@@ -98,6 +98,18 @@ class ChatRoomController {
       }
     }
   }
+
+  public async showMessagesList(req: Request, res: Response): Promise<void> {
+    try {
+      const { roomName } = req.params;
+      const list = await this.chatRoomRepository.showMessagesList(roomName);
+      res.status(200).json({ message: "Recibido correctamente", list });
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(500).json({ message: error.message });
+      }
+    }
+  }
 }
 
 export default new ChatRoomController();
