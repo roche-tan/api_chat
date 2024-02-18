@@ -20,6 +20,7 @@ ChatRoom.init(
     },
     messageList: {
       type: DataTypes.JSON,
+      defaultValue: [],
       allowNull: false,
     },
     createdAt: {

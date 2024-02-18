@@ -1,5 +1,4 @@
 import ChatRoom from "../models/chatRoom.model.sql";
-import IMessage from "../infraestructure/message.infraestructure";
 
 class ChatRoomRepository {
   // crear chatRoom
@@ -40,20 +39,22 @@ class ChatRoomRepository {
     userName: string
   ) {
     const chatRoom = await ChatRoom.findOne({ where: { roomName } });
-
     if (!chatRoom) {
       throw new Error("La sala no existe");
     }
+    let messageList = Array.isArray(chatRoom.messageList)
+      ? chatRoom.messageList
+      : [];
 
-    let messageList: IMessage[];
-    // Verificar si messageList ya es un objeto JavaScript (un arreglo en este caso)
-    if (chatRoom.messageList && Array.isArray(chatRoom.messageList)) {
-      // Convertir la cadena JSON a un objeto de JavaScript
-      messageList = chatRoom.messageList as IMessage[];
-    } else {
-      // Inicializar como un arreglo vacío si no hay datos previos
-      messageList = [];
-    }
+    // let messageList: IMessage[];
+    // // Verificar si messageList ya es un objeto JavaScript (un arreglo en este caso)
+    // if (chatRoom.messageList && Array.isArray(chatRoom.messageList)) {
+    //   // Convertir la cadena JSON a un objeto de JavaScript
+    //   messageList = chatRoom.messageList as IMessage[];
+    // } else {
+    //   // Inicializar como un arreglo vacío si no hay datos previos
+    //   messageList = [];
+    // }
 
     const newMessage = {
       userName,
@@ -69,8 +70,9 @@ class ChatRoomRepository {
     // Usar setDataValue para indicar a Sequelize que el campo 'messageList' ha sido modificado
     // chatRoom.setDataValue("messageList", messageList);
     // console.log(messageList, "message list push");
-    // await chatRoom.update({ messageList: messageList });
-    await chatRoom.update({ messageList: JSON.stringify(messageList) });
+    chatRoom.changed("messageList", true); // decir a sequelize que messageList ha cambiado
+    await chatRoom.update({ messageList: messageList });
+    // await chatRoom.update({ messageList: JSON.stringify(messageList) });
 
     // Guardar los cambios en la base de datos
     // await chatRoom.save();
