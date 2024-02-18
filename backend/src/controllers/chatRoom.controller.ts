@@ -74,34 +74,30 @@ class ChatRoomController {
     }
   }
 
-  // POST /chatroom/:id/message: añade un mensaje a la sala de chat.
-  // public async addMessageToChatRoom(
-  //   req: Request,
-  //   res: Response
-  // ): Promise<void> {
-  //   console.log("addMessageToChatRoom controller");
-  //   try {
-  //     const chatRoomId = parseInt(req.params.id, 10);
-  //     const { message, userId } = req.body;
+  public async addMessageToChatRoom(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    console.log("addMessageToChatRoom controller");
+    try {
+      const { roomName } = req.params;
+      const { message, userName } = req.body;
 
-  //     // Añadir mensaje a la sala
-  //     const updatedChatRoom =
-  //       // await this.chatRoomRepository.addMessageToChatRoomById(
-  //       await this.chatRoomRepository.addMessageToChatRoomByName(
-  //         // chatRoomId,
-  //         name,
-  //         message,
-  //         userId
-  //       );
+      // Añadir mensaje a la sala
+      await this.chatRoomRepository.addMessageToChatRoomByName(
+        roomName,
+        message,
+        userName
+      );
 
-  //     res.status(200).json(updatedChatRoom);
-  //   } catch (error) {
-  //     // Manejo de errores
-  //     if (error instanceof Error) {
-  //       res.status(500).json({ message: error.message });
-  //     }
-  //   }
-  // }
+      res.status(200).json({ message: "Mensaje añadido correctamente" });
+    } catch (error) {
+      // Manejo de errores
+      if (error instanceof Error) {
+        res.status(500).json({ message: error.message });
+      }
+    }
+  }
 }
 
 export default new ChatRoomController();

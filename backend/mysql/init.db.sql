@@ -13,3 +13,11 @@ CREATE TABLE chatRoom (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- CREATE TABLE message (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   chatRoomId INT NOT NULL,
+--   userName VARCHAR(150) NOT NULL,
+--   message TEXT NOT NULL,
+--   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--   FOREIGN KEY (chatRoomId) REFERENCES chatRoom(id)
+-- );

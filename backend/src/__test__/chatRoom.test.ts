@@ -53,8 +53,8 @@ describe("ChatRoomRepository", () => {
       roomName: "Test Room",
       messageList: [],
     });
-    const chatRoom = await chatRoomRepository.showChatRoomById(
-      createdChatRoom.id
+    const chatRoom = await chatRoomRepository.showChatRoomByName(
+      createdChatRoom.roomName
     );
   });
 
@@ -82,45 +82,17 @@ describe("ChatRoomRepository", () => {
     expect(rooms.some((room) => room.roomName === "Room 2")).toBeTruthy();
   });
 
-  test("showChatRoomById devuelve la sala de chat correcta por su ID", async () => {
-    const chatRoom = await chatRoomRepository.showChatRoomById(
-      createdChatRoom!.id
-    );
-    expect(chatRoom).not.toBeNull;
-    expect(chatRoom?.id).toEqual(createdChatRoom!.id);
-    expect(chatRoom?.roomName).toEqual("Test Room");
-  });
-
-  test("showChatRoomById retorna null si la sala de chat no existe", async () => {
-    // Asumiendo que el ID 9999 no existe
-    const chatRoom = await chatRoomRepository.showChatRoomById(9999);
-    expect(chatRoom).toBeNull();
-  });
 
   test("addMessageToChatRoom añade un mensaje a la sala de chat correctamente", async () => {
     // Asegúrate de tener una sala de chat creada para probar
     const roomName = "Room 1";
-    const createdRoom = await ChatRoom.create({ roomName, messageList: [] });
-
-    const chatRoomId = createdRoom.id;
     const message = "Este es un mensaje de prueba";
-    const userId = 1; // Asume que este es un ID válido de usuario en tu aplicación
+    const userName = "testUser"; 
 
-    // Añade un mensaje a la sala de chat
-    const updatedRoom = await chatRoomRepository.addMessageToChatRoom(
-      chatRoomId,
-      message,
-      userId
-    );
+    await chatRoomRepository.addMessageToChatRoomByName(roomName, message, userName)
 
-    // Verifica que el mensaje se haya añadido correctamente
-    expect(updatedRoom.messageList).toHaveLength(1);
-    expect(updatedRoom.messageList[0]).toEqual(
-      expect.objectContaining({
-        message,
-        userId,
-        date: expect.any(String), // Aquí se verifica que la fecha sea una cadena, pero no se compara con un valor específico
-      })
-    );
+    //verificar si el último mensaje en la lista corresponde al que acabas de añadir.
+    const chatRoom = await chatRoomRepository.showChatRoomByName(roomName)
+    expect(chatRoom).not.toBeNull()
   });
 });

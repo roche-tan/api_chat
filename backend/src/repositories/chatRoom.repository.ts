@@ -1,4 +1,5 @@
 import ChatRoom from "../models/chatRoom.model.sql";
+import IMessage from "../infraestructure/message.infraestructure";
 
 class ChatRoomRepository {
   // crear chatRoom
@@ -33,29 +34,6 @@ class ChatRoomRepository {
     return chatRoom;
   }
 
-  // async addMessageToChatRoomById(
-  //   chatRoomId: number,
-  //   message: string,
-  //   userName: string
-  // ) {
-  //   const chatRoom = await ChatRoom.findByPk(chatRoomId);
-
-  //   if (!chatRoom) {
-  //     throw new Error("La sala no existe");
-  //   }
-
-  //   const messageList = chatRoom.messageList || [];
-  //   const newMessage = {
-  //     userName,
-  //     message,
-  //     timestamp: new Date().toDateString(),
-  //   };
-
-  //   messageList.push(newMessage);
-
-  //   await chatRoom.update({ messageList });
-  // }
-
   async addMessageToChatRoomByName(
     roomName: string,
     message: string,
@@ -67,17 +45,35 @@ class ChatRoomRepository {
       throw new Error("La sala no existe");
     }
 
-    const messageList = chatRoom.messageList || [];
+    let messageList: IMessage[];
+    // Verificar si messageList ya es un objeto JavaScript (un arreglo en este caso)
+    if (chatRoom.messageList && Array.isArray(chatRoom.messageList)) {
+      // Convertir la cadena JSON a un objeto de JavaScript
+      messageList = chatRoom.messageList as IMessage[];
+    } else {
+      // Inicializar como un arreglo vacío si no hay datos previos
+      messageList = [];
+    }
+
     const newMessage = {
       userName,
       message,
       timestamp: new Date().toISOString(),
     };
+
     console.log(messageList, "message list repo");
     console.log(newMessage, "new message list repo");
     messageList.push(newMessage);
-    console.log(messageList, "message list push");
-    await chatRoom.update({ messageList });
+    console.log(messageList, "message list");
+
+    // Usar setDataValue para indicar a Sequelize que el campo 'messageList' ha sido modificado
+    // chatRoom.setDataValue("messageList", messageList);
+    // console.log(messageList, "message list push");
+    // await chatRoom.update({ messageList: messageList });
+    await chatRoom.update({ messageList: JSON.stringify(messageList) });
+
+    // Guardar los cambios en la base de datos
+    // await chatRoom.save();
   }
 }
 

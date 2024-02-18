@@ -5,6 +5,7 @@ const router = Router();
 
 router.post("/", chatRoomController.createChatRoom);
 router.get("/", chatRoomController.showListChatRooms);
-router.get("/:name", chatRoomController.showChatRoomByName);
+router.get("/:roomName", chatRoomController.showChatRoomByName);
+router.post('/:roomName/messages', chatRoomController.addMessageToChatRoom);
 
 export default router;
