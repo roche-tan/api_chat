@@ -17,6 +17,10 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     createdAt: {
       field: "created_at",
       type: DataTypes.DATE,
