@@ -20,8 +20,8 @@ class UserController {
 
       const { name, password } = req.body;
 
-      if(!name || !password){
-        throw new Error("Nombre y contraseña requeridos")
+      if (!name || !password) {
+        throw new Error("Nombre y contraseña requeridos");
       }
 
       // Crear usuario
@@ -41,8 +41,29 @@ class UserController {
       }
     }
   }
+
+  public async loginUser(req: Request, res: Response): Promise<void> {
+    try {
+      const { name, password } = req.body;
+
+      if (!name || !password) {
+        throw new Error("Nombre y contraseña requeridos");
+      }
+
+      const user = await this.userRepository?.authenticateUser(name, password);
+
+      res.status(200).json({
+        message: "Autenticación exitosa",
+        name: user?.name,
+        userId: user?.id,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      }
+    }
+  }
 }
 
 // Exportamos la instancia del controlador
-
 export default new UserController();

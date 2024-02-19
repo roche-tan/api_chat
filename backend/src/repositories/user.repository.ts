@@ -34,6 +34,20 @@ class UserRepository {
     return newUser;
   }
 
+  async authenticateUser(name: string, password: string) {
+    const user = await User.findOne({ where: { name } });
+    if (!user) {
+      throw new Error("Usuario no encontrado");
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error("Contraseña inválida");
+    }
+
+    return user; // Devuelve el usuario si la autenticación es exitosa
+  }
+
   // Encontrar un usuario por id
   async findUserById(id: string) {
     const user = await User.findByPk(id);
