@@ -18,10 +18,14 @@ class UserController {
         throw new Error("User repository is not initialized");
       }
 
-      const { name } = req.body;
+      const { name, password } = req.body;
+
+      if(!name || !password){
+        throw new Error("Nombre y contraseña requeridos")
+      }
 
       // Crear usuario
-      const newUser = await this.userRepository.createUser(name);
+      const newUser = await this.userRepository.createUser(name, password);
       console.log("create user controller", newUser);
       //pasar datos del usuario
       res.status(200).json({ name: newUser.name, userId: newUser.id });
