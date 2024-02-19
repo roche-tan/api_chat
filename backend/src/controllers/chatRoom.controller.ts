@@ -9,6 +9,7 @@ class ChatRoomController {
     this.createChatRoom = this.createChatRoom.bind(this);
     this.showListChatRooms = this.showListChatRooms.bind(this);
     this.showChatRoomByName = this.showChatRoomByName.bind(this);
+    this.showMessagesList = this.showMessagesList.bind(this);
   }
 
   // POST /chatroom: crea una sala.
@@ -99,10 +100,16 @@ class ChatRoomController {
     }
   }
 
+  // GET chatrooms/room
   public async showMessagesList(req: Request, res: Response): Promise<void> {
+    console.log("show message list controller");
     try {
-      const { roomName } = req.params;
-      const list = await this.chatRoomRepository.showMessagesList(roomName);
+      console.log("show message list controller TRY");
+
+      const { room } = req.params;
+      console.log("show message list controller roomname", room);
+
+      const list = await this.chatRoomRepository.showMessagesList(room);
       res.status(200).json({ message: "Recibido correctamente", list });
     } catch (error) {
       if (error instanceof Error) {

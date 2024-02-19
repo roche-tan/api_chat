@@ -46,16 +46,6 @@ class ChatRoomRepository {
       ? chatRoom.messageList
       : [];
 
-    // let messageList: IMessage[];
-    // // Verificar si messageList ya es un objeto JavaScript (un arreglo en este caso)
-    // if (chatRoom.messageList && Array.isArray(chatRoom.messageList)) {
-    //   // Convertir la cadena JSON a un objeto de JavaScript
-    //   messageList = chatRoom.messageList as IMessage[];
-    // } else {
-    //   // Inicializar como un arreglo vacío si no hay datos previos
-    //   messageList = [];
-    // }
-
     const newMessage = {
       userName,
       message,
@@ -79,7 +69,9 @@ class ChatRoomRepository {
   }
 
   async showMessagesList(roomName: string) {
+    console.log("show message list repo");
     const chatRoom = await ChatRoom.findOne({ where: { roomName } });
+    console.log("show message list repo", chatRoom);
     if (!chatRoom) {
       throw new Error("La sala no existe");
     }
