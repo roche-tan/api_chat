@@ -35,12 +35,14 @@ class UserRepository {
   }
 
   async authenticateUser(name: string, password: string) {
+    console.log("auth user");
     const user = await User.findOne({ where: { name } });
     if (!user) {
       throw new Error("Usuario no encontrado");
     }
-
+    console.log("auth user", user);
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log("auth user pass", isPasswordValid);
     if (!isPasswordValid) {
       throw new Error("Contraseña inválida");
     }

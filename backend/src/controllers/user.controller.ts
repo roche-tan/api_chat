@@ -7,6 +7,7 @@ class UserController {
   constructor() {
     this.userRepository = new UserRepository();
     this.createUser = this.createUser.bind(this);
+    this.loginUser = this.loginUser.bind(this);
   }
   // POST /users: crea un usuario.
   public async createUser(req: Request, res: Response): Promise<void> {
@@ -42,24 +43,29 @@ class UserController {
     }
   }
 
+  // POST: users/login
   public async loginUser(req: Request, res: Response): Promise<void> {
+    console.log("controller loginUser");
     try {
       const { name, password } = req.body;
+      console.log(name, password);
 
       if (!name || !password) {
         throw new Error("Nombre y contraseña requeridos");
       }
-
-      const user = await this.userRepository?.authenticateUser(name, password);
-
+      console.log("controll user");
+      const user = await this.userRepository!.authenticateUser(name, password);
+      console.log(user, "user controller loginUser");
       res.status(200).json({
         message: "Autenticación exitosa",
-        name: user?.name,
-        userId: user?.id,
+        name: user.name,
+        password: user.password,
       });
     } catch (error) {
       if (error instanceof Error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({
+          message: "No se ha podido autentificar usuario y/o contraseña",
+        });
       }
     }
   }
