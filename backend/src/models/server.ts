@@ -8,6 +8,7 @@ import config from "../config";
 
 import routerUser from "../routes/user.routes";
 import routerChatRoom from "../routes/chatRoom.routes";
+import routerAuth from "../routes/auth.routes";
 import ChatRoomRepository from "../repositories/chatRoom.repository";
 
 const logger = (req: Request, _res: Response, next: NextFunction) => {
@@ -57,6 +58,7 @@ class Server {
   middlewares() {
     this.app.use(express.json());
     this.app.use(cors());
+    this.app.use("/", routerAuth);
     this.app.use(logger);
   }
 
@@ -123,8 +125,9 @@ class Server {
         console.log(`Usuario se ha unido a la sala ${room}`);
 
         // Recupero y emito los mensajes existentes de la sala
-        const messagesList = await await this.chatRoomRepository.showMessagesList(room)
-        socket.emit("existing_messages", messagesList)
+        const messagesList =
+          await await this.chatRoomRepository.showMessagesList(room);
+        socket.emit("existing_messages", messagesList);
       });
 
       // Manejo de mensajes en una sala de chat

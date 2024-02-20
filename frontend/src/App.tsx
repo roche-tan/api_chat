@@ -9,13 +9,12 @@ import {
 import ChatList from "./components/ChatList";
 import ChatRoom from "./components/ChatRoom";
 import Login from "./components/Login";
+import GoogleAuth from "./components/GoogleAuth";
 
 // Asegúrate de que la URL coincida con el endpoint de tu servidor Socket.IO
 const socket = io("http://localhost:3001");
 
-function App() {
-  // const [room, setRoom] = useState("");
-  // const [message, setMessage] = useState("");
+const App = () => {
   const [messages, setMessages] = useState<
     { userName: string; message: string }[]
   >([]); // Define explícitamente el tipo del array
@@ -89,6 +88,7 @@ function App() {
             )
           }
         />
+        <Route path="/auth/google" element={<GoogleAuth />} />
         <Route
           path="/chatrooms"
           element={
@@ -101,16 +101,11 @@ function App() {
         />
         <Route
           path="/chatrooms/:id"
-          element={
-            <ChatRoom
-              socket={socket}
-              userName={userName} /* Pasa aquí tus props necesarias */
-            />
-          }
+          element={<ChatRoom socket={socket} userName={userName} />}
         />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

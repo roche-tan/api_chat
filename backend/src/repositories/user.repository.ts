@@ -55,6 +55,28 @@ class UserRepository {
     const user = await User.findByPk(id);
     return user;
   }
+
+  async findUserByEmail(email: string) {
+    return await User.findOne({ where: { email } });
+  }
+
+  async createUserFromGoogle(email: string, name: string, avatar: string) {
+    // Verifica si el usuario ya existe
+    let user = await this.findUserByEmail(email);
+    if (user) {
+      throw new Error("Usuario ya existe");
+    }
+
+    // Crea el usuario con los datos de Google
+    user = await User.create({
+      name,
+      email,
+      avatar,
+      isGoogleUser: true,
+    });
+
+    return user;
+  }
 }
 
 export default UserRepository;

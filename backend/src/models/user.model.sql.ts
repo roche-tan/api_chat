@@ -4,7 +4,10 @@ import { sequelize } from "../db/config.sql";
 class User extends Model {
   public id!: number;
   public name!: string;
+  public email!: string;  // Agregado para Google Auth
   public password!: string;
+  public avatar?: string; // Opcional, para usuarios de Google
+  public isGoogleUser?: boolean; // Indicar si el usuario se autenticó a través de Google
 }
 
 User.init(
@@ -18,9 +21,23 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true,  // Podría ser nulo para usuarios que no se registren con Google
+      unique: true,     // Asegurarse de que el correo electrónico sea único
+    },
     password: {
       type: DataTypes.STRING,
+      allowNull: true,  // Permitir nulo para usuarios que se registran con Google
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: true,  // Opcional
+    },
+    isGoogleUser: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
     },
     createdAt: {
       field: "created_at",

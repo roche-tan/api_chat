@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
+import GoogleAuth from "./GoogleAuth";
 
 // const createUser = async (userName, password) => {
 //   console.log(userName);
@@ -110,18 +111,18 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>{isLoginMode ? "Iniciar Sesión" : "Registrarse"}</h2>
       <form onSubmit={handleAction}>
         <input
           type="text"
-          placeholder="Enter your name"
+          placeholder="Ingresa tu nombre"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
         />
         <input
           type="password"
-          placeholder="Enter your password"
+          placeholder="Ingresa tu contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -129,10 +130,13 @@ const Login = ({ onLogin }) => {
           {isLoginMode ? "Iniciar Sesión" : "Registrarse"}
         </button>
         <button type="button" onClick={toggleMode}>
-          Quiero {isLoginMode ? "Registrarme" : "Ya tengo cuenta"}
+          {isLoginMode ? "Quiero Registrarme" : "Ya tengo cuenta"}
         </button>
         {error && <Alert message={error} />}
       </form>
+      <div className="google-auth">
+        <GoogleAuth />
+      </div>
     </div>
   );
 };
