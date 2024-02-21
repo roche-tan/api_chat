@@ -9,7 +9,6 @@ import {
 import ChatList from "./components/ChatList";
 import ChatRoom from "./components/ChatRoom";
 import Login from "./components/Login";
-import GoogleAuth from "./components/GoogleAuth";
 
 // Asegúrate de que la URL coincida con el endpoint de tu servidor Socket.IO
 const socket = io("http://localhost:3001");
@@ -88,7 +87,6 @@ const App = () => {
             )
           }
         />
-        <Route path="/auth/google" element={<GoogleAuth />} />
         <Route
           path="/chatrooms"
           element={
