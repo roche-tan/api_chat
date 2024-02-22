@@ -10,6 +10,7 @@ const GoogleAuth = () => {
         token: res?.tokenId,
       });
 
+      console.log(result, "result google auth");
       setUser(result.data.user);
     } catch (err) {
       console.log(err);

@@ -24,22 +24,7 @@ const App = () => {
   const handleLogin = (userNameFromLogin: string) => {
     setIsLoggedIn(true);
     setUserName(userNameFromLogin); // Asegurarse de actualizar el estado userName con el valor recibido
-
-    // Aquí puedes configurar adicionalmente el nombre de usuario u otros estados necesarios
   };
-
-  //   const joinRoomByName = (roomName: string) => {
-  //     setRoom(roomName); // Actualiza el estado de la sala con la sala seleccionada
-  //     socket.emit('join_room', roomName); // Unirse a la sala seleccionada
-  //   };
-
-  //   // Función para enviar mensajes
-  // const sendMessage = () => {
-  //   if (message !== "" && userName !== "") {
-  //     socket.emit('chat_message', { room, message, userName });
-  //     setMessage('');
-  //   }
-  // };
 
   useEffect(() => {
     socket.on("chat_message", (data) => {

@@ -3,8 +3,11 @@ import { OAuth2Client } from "google-auth-library";
 import UserRepository from "../repositories/user.repository";
 import jwt from "jsonwebtoken";
 
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const SECRET_KEY = process.env.JWT_KEY || "MxYNWOF1jXwjtBaKfICw8jZI182uOZgIHCzE113wMVQ=";
+const googleClient = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.SECRET_KEY,
+  "postmessage"
+);
 
 class AuthController {
   private userRepository: UserRepository = new UserRepository();
@@ -13,10 +16,12 @@ class AuthController {
   public async authenticateWithGoogle(req: Request, res: Response) {
     try {
       const { token } = req.body;
+      console.log(token, "token google oauth");
       const ticket = await googleClient.verifyIdToken({
         idToken: token,
         audience: process.env.GOOGLE_CLIENT_ID,
       });
+      console.log(ticket, "ticket google oauth");
 
       const payload = ticket.getPayload();
       if (!payload || !payload.email) {
@@ -26,6 +31,8 @@ class AuthController {
       }
 
       let user = await this.userRepository.findUserByEmail(payload.email);
+      console.log(user, "user google oauth");
+
       if (!user) {
         user = await this.userRepository.createUserFromGoogle(
           payload.email,
@@ -36,6 +43,8 @@ class AuthController {
 
       // Generar un token para el usuario
       const userToken = this.generateToken(user);
+      console.log(userToken, "userToken google oauth");
+
       res.json({ user, token: userToken });
     } catch (error) {
       res
@@ -46,9 +55,16 @@ class AuthController {
 
   // Método para generar el token JWT
   private generateToken(user: any) {
-    return jwt.sign({ userId: user.id, email: user.email }, SECRET_KEY, {
-      expiresIn: "24h",
-    });
+    if (!process.env.SECRET_KEY) {
+      throw new Error("La clave secreta no está definida");
+    }
+    return jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "24h",
+      }
+    );
   }
 }
 

@@ -35,7 +35,7 @@ function ChatRoom({ socket, userName }) {
   };
 
   return (
-    <div>
+    <div className="chat-container">
       <h2>Room: {roomName}</h2>
       <input
         type="text"
