@@ -40,10 +40,7 @@ class Server {
     this.io = new IOServer(this.httpServer, {
       cors: {
         origin: "http://localhost:3000",
-        // origin: "*",
         methods: ["GET", "POST"],
-        // credentials: true,
-        // allowedHeaders: ["my-custom-header"], // Añade esto solo si necesitas encabezados personalizados
       },
     });
     this.rooms = {};
@@ -72,13 +69,6 @@ class Server {
   configureSocket() {
     this.io.on("connection", (socket: Socket) => {
       console.log("Un usuario se ha conectado");
-
-      // socket.on("create_room", (roomName) => {
-      //   this.rooms[roomName] = { members: [] }; // Crear una nueva sala con un array de miembros
-      //   socket.join(roomName); // Unir al creador a la sala
-      //   this.io.emit("room_list", Object.keys(this.rooms)); // Emitir la lista actualizada de salas a todos los clientes
-      // });
-
       socket.on("create_room", async (roomName) => {
         try {
           console.log("create room socket", roomName);
@@ -101,7 +91,6 @@ class Server {
         try {
           const roomList = await this.chatRoomRepository.showChatRoomList();
           const roomNames = roomList.map((room) => room.roomName); //itera en las salas para luego mostarlas
-          // socket.emit("room_list", Object.keys(this.rooms)); // Emitir la lista de salas al solicitante
           socket.emit("room_list", roomNames); // Emitir la lista de salas al solicitante
         } catch (error) {
           if (error instanceof Error) {
