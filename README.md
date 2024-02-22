@@ -41,7 +41,7 @@ Para obtener una copia local en funcionamiento, sigue estos pasos:
 
 2. Iniciar sesion usuario registrado (login user)
 
-   URL: /users/login
+   ```URL: /users/login
    Método: POST
    Cuerpo de la Petición:
    name: Nombre del usuario (tipo string).
@@ -51,7 +51,7 @@ Para obtener una copia local en funcionamiento, sigue estos pasos:
 
 3. Crear Sala (create room)
 
-   URL: /chatrooms
+   ```URL: /chatrooms
    Método: POST
    Cuerpo de la Petición:
    name: Nombre de la sala (tipo string).
@@ -60,14 +60,14 @@ Para obtener una copia local en funcionamiento, sigue estos pasos:
 
 4. Obtener Lista de Salas (get rooms list)
 
-   URL: /chatrooms
+   ```URL: /chatrooms
    Método: GET
    Respuesta Esperada:
    Código de estado 200 OK con un JSON que contiene la lista de todas las salas disponibles.
 
 5. Obtener Mensajes de una Sala (get room chat messages)
 
-   URL: /chatrooms/{nombreDeLaSala}
+   ```URL: /chatrooms/{nombreDeLaSala}
    Método: GET
    Respuesta Esperada:
    Código de estado 200 OK con un JSON que contiene los mensajes de la sala especificada.
