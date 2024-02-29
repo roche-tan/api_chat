@@ -8,7 +8,6 @@ import config from "../config";
 
 import routerUser from "../routes/user.routes";
 import routerChatRoom from "../routes/chatRoom.routes";
-import routerAuth from "../routes/auth.routes";
 import ChatRoomRepository from "../repositories/chatRoom.repository";
 
 const logger = (req: Request, _res: Response, next: NextFunction) => {
@@ -27,7 +26,6 @@ class Server {
   private chatRoomRepository: ChatRoomRepository;
   private path = {
     users: "/users",
-    // users: "/",
     chatRooms: "/chatrooms",
   };
   private rooms: Record<string, { members: string[] }> = {};
@@ -55,7 +53,6 @@ class Server {
   middlewares() {
     this.app.use(express.json());
     this.app.use(cors({ origin: "*" }));
-    this.app.use("/", routerAuth);
     this.app.use(logger);
   }
 

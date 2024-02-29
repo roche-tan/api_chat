@@ -21,6 +21,8 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [rooms, setRooms] = useState<string[]>([]);
 
+  console.log("REACT_APP_CLIENT_ID:", process.env.REACT_APP_CLIENT_ID);
+
   const handleLogin = (userNameFromLogin: string) => {
     setIsLoggedIn(true);
     setUserName(userNameFromLogin); // Asegurarse de actualizar el estado userName con el valor recibido
@@ -58,7 +60,6 @@ const App = () => {
     }
   };
 
-  // Asegúrate de tener un input para que el usuario pueda definir su nombre
   return (
     <Router>
       <Routes>
